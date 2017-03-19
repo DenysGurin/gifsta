@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    
+
     'social_django.middleware.SocialAuthExceptionMiddleware',   
 ]
 
@@ -120,8 +120,8 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-SOCIAL_AUTH_FACEBOOK_KEY = '1869384496633128'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = '582f59cbc82b6c0266ae8947dfe501fa'  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = '170616766788089'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '904a30830aea492f722a7e47598a5bdb'  # App Secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '506326838699-avjbddapvc2d7jbk8gohv75rnlresgod.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'Nr2pm6Cehj0CacZPaUufwVzZ'

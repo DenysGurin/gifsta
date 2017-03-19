@@ -12,6 +12,13 @@ input[type=text], input[type=password], input[type=email] {
 }
 
 
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
 
 /* Extra styles for the cancel button */
 .cancelbtn {
