@@ -6,17 +6,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .verification import is_notVerifyed
-from .forms import PoolForm, RegisterForm
+from .forms import PoolForm, RegisterForm, UploadForm
+from .models import Gif
 
 class Pool(View):
 
     def get(self, request):
         show = ('show', 'hide')
         if request.user.is_authenticated:
+            gifs = Gif.objects.all()
             show = ('hide', 'show')
-            return render(request, "pool.html", {"authenticated":request.user, "show":show})
+            return render(request, "pool.html", {"authenticated":request.user, "show":show, "gifs":gifs})
         else:
-            return render(request, "pool.html", {"authenticated":"False", "show":show})
+            return render(request, "pool.html", {"authenticated":"False", "show":show, "gifs":gifs})
     def post(self, request):
         if request.POST.get('submit') == 'registration':
             register_form = RegisterForm(request.POST)
@@ -49,3 +51,21 @@ class Pool(View):
         elif request.POST.get('submit') == 'logout':
             logout(request)
             return redirect("/")
+
+        elif request.POST.get('submit') == 'upload':
+            if request.user.is_authenticated:
+                #return HttpResponse(request.user.username)
+                upload_form = UploadForm(request.POST, request.FILES)
+                
+                if upload_form.is_valid():
+                    creator = request.user.id
+                    name = upload_form.cleaned_data['name']
+                    tags = upload_form.cleaned_data['tags']
+                    gif_file = upload_form.cleaned_data['gif_file']
+                    gif = Gif.objects.create(creator=creator, name=name, tags=tags, gif_file=gif_file)
+                    user.save()
+                    
+                    return redirect("/")
+                return HttpResponse(upload_form)
+            else:
+                return render(request, "pool.html", {"authenticated":"False"})

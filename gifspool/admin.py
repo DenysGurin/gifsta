@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Gif
+
+class GifAdmin(admin.ModelAdmin):
+    list_display = ('name', 'tags', 'upload_date', 'gif_path',)
+    # exclude
+    # readonly_fields 
+admin.site.register(Gif, GifAdmin)

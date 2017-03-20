@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Gif
+
 
 class LoginForm(forms.Form):
 	pass
@@ -14,6 +16,7 @@ class RegisterForm(forms.ModelForm):
 class PoolForm(forms.Form):
 	pass
 
-class UploadForm(forms.Form):
-	pass
-
+class UploadForm(forms.ModelForm):
+	class Meta:
+		model = Gif
+		fields = ['name', 'tags', 'gif_file', ]

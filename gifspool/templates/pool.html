@@ -29,8 +29,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
       <div class="w3-button w3-show-inline-block w3-{{show.0}} w3-hover-red" onclick="document.getElementById('id01').style.display='block'">Login</div>
       <div class="w3-button w3-show-inline-block w3-{{show.0}} w3-hover-red" onclick="document.getElementById('id02').style.display='block'">Singin</div>
     </div>
+    <div class="w3-button w3-show-inline-block w3-{{show.1}} w3-hover-red" onclick="document.getElementById('id03').style.display='block'">Upload</div>
     <div class="w3-right w3-show-inline-block">
-      <button class="w3-button w3-{{show.1}} w3-hover-red" type="submit" name="submit" value="logout">Logout</button>
+      <button class="w3-button w3-show-inline-block w3-{{show.1}} w3-hover-red" type="submit" name="submit" value="logout">Logout</button>
     </div>
     <div class="w3-center">Polls Authenticated: {{ authenticated }}</div>
   </div>
@@ -100,24 +101,52 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
   </form>
 </div>
 
+<!-- Upload -->
+<div id="id03" class="modal">
+  
+  <form name="Upload" class="modal-content animate" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id03').style.display='none'" class="close" title="Close Modal">&times;</span>
+    </div>
 
+    <div class="container">
+      <label><b>Name</b></label>
+      <input type="text" placeholder="Enter Name" name="name">
+      <div>{{ n_error }}</div>
+
+      <label><b>Tags</b></label>
+      <input type="text" placeholder="Enter Tags" name="tags">
+      <div>{{ p_error }}</div>
+      
+      <label><b>Gif File</b></label>
+      <input type="file" placeholder="Enter Gif" name="gif_file">
+      <div>{{ vp_error }}</div>
+
+      <button type="submit" name="submit" value="upload">Upload</button>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id03').style.display='none'" class="cancelbtn">Cancel</button>
+    </div>
+  </form>
+</div>
 
 <!-- !PAGE CONTENT! -->
 <form name="content" class="w3-main w3-content w3-padding" style="max-width:1300px;margin-top:100px" method=post>{% csrf_token %}
-  {% if polls %}
+  {% if gifs %}
     
     <div class="w3-row-padding w3-center " id="food">
-    {% for poll in polls.all %}
+    {% for gif in gifs.all %}
       <div class="w3-quarter w3-mobile w3-padding-8">
         <div class="w3-card-4">
           <div class="w3-container w3-light-green w3-text-white">
-            <h3>{{ poll.name }}</h3> <!-- The Perfect Sandwich, A Real NYC Classic -->
+            <h3>{{ gif.name }}</h3> <!-- The Perfect Sandwich, A Real NYC Classic -->
           </div>
-          <img class="w3-margin" src="{{ poll.path }}{{ poll.picture }}" style= "height: 150px">
+          <img class="w3-margin" src="{{ gif.gif_path }}" style= "height: 150px">
           <div class="w3-container">
-            <p>{{ poll.description }}</p> <!-- Just some random text, lorem ipsum text praesent tincidunt ipsum lipsum. -->
+            <p>{{ gif.tags }}</p> <!-- Just some random text, lorem ipsum text praesent tincidunt ipsum lipsum. -->
           </div>
-          <button type="submit" name="test" class="w3-button w3-green w3-block" value={{poll.id}}>Start</button>
+          <button type="submit" name="test" class="w3-button w3-green w3-block" value={{gif.id}}>Start</button>
         </div>
       </div>
     {% endfor %}
@@ -147,22 +176,32 @@ function w3_close() {
 }
 
 // Get the modal1
-var modal1 = document.getElementById('id01');
+var modal = document.getElementById('id01');
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal1) {
-        modal1.style.display = "none";
+    if (event.target == ) {
+        modal.style.display = "none";
     }
 }
 
 // Get the modal2
-var modal2 = document.getElementById('id02');
+var modal = document.getElementById('id02');
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal2) {
-        modal2.style.display = "none";
+    if (event.target == modal) {
+        modal.style.display = "none";
+      }
+  }
+
+// Get the modal3
+var modal = document.getElementById('id03');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
       }
   }
 </script>
