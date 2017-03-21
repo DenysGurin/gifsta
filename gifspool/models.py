@@ -15,4 +15,4 @@ class Gif(models.Model):
 	likes = models.TextField(default='')	
 	post_to = models.BooleanField(default=False)
 	gif_file = models.FileField(upload_to=user_directory_path)
-	gif_path = models.FilePathField(path=user_directory_path, default='')
+	gif_path = models.TextField(default=str(gif_file.storage))

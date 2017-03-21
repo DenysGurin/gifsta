@@ -1,135 +1,99 @@
-<!DOCTYPE html>
+<!DOCTYP HTML>
 <html>
-<title>W3.CSS Template</title>
+<title>gifsta</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-<link rel="stylesheet" type="text/css" href="/static/gifspool/style.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
-.w3-sidenav a {padding:20px}
+body,h1 {font-family: "Montserrat", sans-serif}
+img {margin-bottom: -7px}
+.w3-row-padding img {margin-bottom: 12px}
 </style>
 <body>
+</body>
+</html>
 
-<!-- Sidenav (hidden by default) -->
-<nav class="w3-sidenav w3-card-2 w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:40%;min-width:300px" id="mySidenav">
-  <a href="javascript:void(0)" onclick="w3_close()"
-  class="w3-closenav">Close Menu</a>
-  <a href="#food" onclick="w3_close()">Blog</a>
-  <a href="#about" onclick="w3_close()">About</a>
-</nav>
+<!-- Topbar -->
+<div class="w3-bar w3-red" id="topbar">
+  
+  <div class="w3-bar w3-bar-item w3-padding-0" style="width:45.0%">
+    <button class="w3-bar-item w3-hover-green">Menu</button>
+    <button class="w3-bar-item w3-hover-green w3-{{show.1}}" onclick="document.getElementById('upload').style.display='block'">Upload</button>
+  </div>
 
-<!-- Top menu -->
-<form method="post">{% csrf_token %}
-<div class="w3-top w3-green">
-  <div class="w3-bar w3-xlarge " >
-    <div class="w3-left w3-button w3-show-inline-block w3-opennav w3-hover-red" onclick="w3_open()">☰Menu</div>
-    <div class="w3-right w3-{{show.0}}">
-      <div class="w3-button w3-show-inline-block w3-{{show.0}} w3-hover-red" onclick="document.getElementById('id01').style.display='block'">Login</div>
-      <div class="w3-button w3-show-inline-block w3-{{show.0}} w3-hover-red" onclick="document.getElementById('id02').style.display='block'">Singin</div>
-    </div>
-    <div class="w3-button w3-show-inline-block w3-{{show.1}} w3-hover-red" onclick="document.getElementById('id03').style.display='block'">Upload</div>
-    <div class="w3-right w3-show-inline-block">
-      <button class="w3-button w3-show-inline-block w3-{{show.1}} w3-hover-red" type="submit" name="submit" value="logout">Logout</button>
-    </div>
-    <div class="w3-center">Polls Authenticated: {{ authenticated }}</div>
+  <div class="w3-bar w3-bar-item w3-padding-0" style="width:33.3%">
+    <div class="w3-bar-item w3-center">Authenticated: {{ authenticated }} {{show}}</div>
+  </div>
+  <div class="w3-bar w3-bar-item w3-right w3-padding-0 ">
+    <button class="w3-bar-item w3-hover-green w3-{{show.0}}" onclick="document.getElementById('login').style.display='block'">Login</button>
+    <button class="w3-bar-item w3-hover-green w3-{{show.0}}" onclick="document.getElementById('register').style.display='block'">Register</button>
+    <a href="/logout" class="w3-button w3-bar-item w3-hover-green w3-{{show.1}}">Logout</a>
   </div>
 </div>
-</form>
+
 <!-- Login -->
-<div id="id01" class="modal">
-    
-    <form name="login" class="modal-content animate" method="post">{% csrf_token %}
-      <div class="imgcontainer">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-      </div>
-
-      <div class="container">
-        <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" value={{username}}>
-
-        <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" value={{password}}>
-        <!-- <div> {{login_er}} </div> -->
-        
-        <button type="submit" name="submit" value="login">Login</button>
-        <a href="{% url 'social:begin' 'facebook' %}">Facebook</a>
-        <input type="checkbox" checked="checked"> Remember me
-      </div>
-
-      <div class="container" style="background-color:#f1f1f1">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-        <span class="psw">Forgot <a href="#">password?</a></span>
-      </div>
-    </form>
+<form id="login" class="w3-modal w3-animate-opacity" method="post">{% csrf_token %}
+  <div class="w3-modal-content" style="padding:32px">
+    <div class="w3-container w3-white">
+      <i onclick="document.getElementById('login').style.display='none'" class="fa fa-remove w3-xlarge w3-button w3-transparent w3-right w3-xlarge"></i>
+      <h2 class="w3-wide">LOGIN</h2>
+      <i class="fa fa-android w3-large"></i> <i class="fa fa-apple w3-large"></i> <i class="fa fa-windows w3-large"></i>
+      <p><input class="w3-input w3-border" type="text" name="username" placeholder="Enter username"></p>
+      <p><input class="w3-input w3-border" type="password" name="password" placeholder="Enter password"></p>
+      <button class="w3-button w3-block w3-padding-large w3-red w3-hover-green w3-margin-bottom" onclick="document.getElementById('login').style.display='none'" type="submit" name="submit" value="login">Login</button>
+    </div>
   </div>
+</form>
 
 <!-- Register -->
-<div id="id02" class="modal">
-  
-  <form name="register" class="modal-content animate" method="post">{% csrf_token %}
-    <div class="imgcontainer">
-      <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+<form id="register" class="w3-modal w3-animate-opacity" method="post">{% csrf_token %}
+  <div class="w3-modal-content" style="padding:32px">
+    <div class="w3-container w3-white">
+      <i onclick="document.getElementById('register').style.display='none'" class="fa fa-remove w3-xlarge w3-button w3-transparent w3-right w3-xlarge"></i>
+      <h2 class="w3-wide">REGISTRATION</h2>
+      <i class="fa fa-android w3-large"></i> <i class="fa fa-apple w3-large"></i> <i class="fa fa-windows w3-large"></i>
+      <p><input class="w3-input w3-border" type="text" name="username" placeholder="Enter username"></p>
+      <p><input class="w3-input w3-border" type="password" name="password" placeholder="Enter password"></p>
+      <p><input class="w3-input w3-border" type="password" name="confirm" placeholder="Confirm password"></p>
+      <p><input class="w3-input w3-border" type="text" name="email" placeholder="Enter e-mail"></p>
+      <button class="w3-button w3-block w3-padding-large w3-red w3-hover-green w3-margin-bottom" onclick="document.getElementById('register').style.display='none'" type="submit" name="submit" value="register">Register</button>
     </div>
+  </div>
+</form>
 
-    <div class="container">
-      <label><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" value={{username}}>
-      <div>{{ n_error }}</div>
-
-      <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" value={{password}}>
-      <div>{{ p_error }}</div>
-      
-      <label><b>Confirm</b></label>
-      <input type="password" placeholder="Confirm Password" name="confirm" value={{confirm}}>
-      <div>{{ vp_error }}</div>
-
-      <label><b>Email</b></label>
-      <input type="email" placeholder="Enter Email" name="email" value={{email}}>
-      <div>{{ e_error }}</div>
-
-      <button type="submit" name="submit" value="registration">Singin</button>
-      <input type="checkbox" checked="checked"> Remember me
+<!-- Logout -->
+<form id="register" class="w3-modal w3-animate-opacity" method="post">{% csrf_token %}
+  <div class="w3-modal-content" style="padding:32px">
+    <div class="w3-container w3-white">
+      <i onclick="document.getElementById('register').style.display='none'" class="fa fa-remove w3-xlarge w3-button w3-transparent w3-right w3-xlarge"></i>
+      <h2 class="w3-wide">REGISTRATION</h2>
+      <i class="fa fa-android w3-large"></i> <i class="fa fa-apple w3-large"></i> <i class="fa fa-windows w3-large"></i>
+      <p><input class="w3-input w3-border" type="text" name="username" placeholder="Enter username"></p>
+      <p><input class="w3-input w3-border" type="password" name="password" placeholder="Enter password"></p>
+      <p><input class="w3-input w3-border" type="password" name="confirm" placeholder="Confirm password"></p>
+      <p><input class="w3-input w3-border" type="text" name="email" placeholder="Enter e-mail"></p>
+      <button class="w3-button w3-block w3-padding-large w3-red w3-hover-green w3-margin-bottom" onclick="document.getElementById('register').style.display='none'" type="submit" name="submit" value="register">Register</button>
     </div>
+  </div>
+</form>
 
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#">password?</a></span>
+<!-- Uplaoad -->
+<form id="upload" class="w3-modal w3-animate-opacity" method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="w3-modal-content" style="padding:32px">
+      <div class="w3-container w3-white">
+        <i onclick="document.getElementById('upload').style.display='none'" class="fa fa-remove w3-xlarge w3-button w3-transparent w3-right w3-xlarge"></i>
+        <h2 class="w3-wide">UPLOAD</h2>
+        <i class="fa fa-android w3-large"></i> <i class="fa fa-apple w3-large"></i> <i class="fa fa-windows w3-large"></i>
+        <p><input class="w3-input w3-border" type="text" name="name" placeholder="Enter name"></p>
+        <p><input class="w3-input w3-border" type="text" name="tags" placeholder="Enter tags"></p>
+        <p><input type="file" name="gif_file" placeholder="Enter gif"></p>
+        <button class="w3-button w3-block w3-padding-large w3-red w3-hover-green w3-margin-bottom" onclick="document.getElementById('upload').style.display='none'" type="submit" name="submit" value="upload">Uplaoad</button>
     </div>
-  </form>
-</div>
+  </div>
+</form>
 
-<!-- Upload -->
-<div id="id03" class="modal">
-  
-  <form name="Upload" class="modal-content animate" method="post" enctype="multipart/form-data">{% csrf_token %}
-    <div class="imgcontainer">
-      <span onclick="document.getElementById('id03').style.display='none'" class="close" title="Close Modal">&times;</span>
-    </div>
-
-    <div class="container">
-      <label><b>Name</b></label>
-      <input type="text" placeholder="Enter Name" name="name">
-      <div>{{ n_error }}</div>
-
-      <label><b>Tags</b></label>
-      <input type="text" placeholder="Enter Tags" name="tags">
-      <div>{{ p_error }}</div>
-      
-      <label><b>Gif File</b></label>
-      <input type="file" placeholder="Enter Gif" name="gif_file">
-      <div>{{ vp_error }}</div>
-
-      <button type="submit" name="submit" value="upload">Upload</button>
-    </div>
-
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id03').style.display='none'" class="cancelbtn">Cancel</button>
-    </div>
-  </form>
-</div>
 
 <!-- !PAGE CONTENT! -->
 <form name="content" class="w3-main w3-content w3-padding" style="max-width:1300px;margin-top:100px" method=post>{% csrf_token %}
@@ -142,7 +106,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
           <div class="w3-container w3-light-green w3-text-white">
             <h3>{{ gif.name }}</h3> <!-- The Perfect Sandwich, A Real NYC Classic -->
           </div>
-          <img class="w3-margin" src="{{ gif.gif_path }}" style= "height: 150px">
+          <img class="w3-margin" src="/media/{{ gif.gif_file }}" style= "height: 150px">
           <div class="w3-container">
             <p>{{ gif.tags }}</p> <!-- Just some random text, lorem ipsum text praesent tincidunt ipsum lipsum. -->
           </div>
@@ -152,58 +116,3 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     {% endfor %}
     </div>  {% endif %}
   </form>
-
-  <!-- Pagination -->
-  <div class="w3-center w3-padding-32">
-    <div class="w3-bar">
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
-      <a href="#" class="w3-bar-item w3-black w3-button">1</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a>
-    </div>
-  </div>
-
-<script>
-// Script to open and close sidenav
-function w3_open() {
-    document.getElementById("mySidenav").style.display = "block";
-}
- 
-function w3_close() {
-    document.getElementById("mySidenav").style.display = "none";
-}
-
-// Get the modal1
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == ) {
-        modal.style.display = "none";
-    }
-}
-
-// Get the modal2
-var modal = document.getElementById('id02');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-      }
-  }
-
-// Get the modal3
-var modal = document.getElementById('id03');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-      }
-  }
-</script>
-</body>
-</html>
