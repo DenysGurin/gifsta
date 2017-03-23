@@ -44,6 +44,16 @@ img {margin-bottom: -7px}
   </div>
 </div>
 
+<!-- Queue -->
+<div class="w3-container" id="queue">
+  {% if queue %}
+    <p>{{ queue.all }}</p>
+    {% for gif in queue.all %}
+      <a>{{ gif.name }};</a>
+    {% endfor %}
+  {% endif %}
+</div>
+
 <!-- Login -->
 <form id="login" class="w3-modal w3-animate-opacity" method="post">{% csrf_token %}
   <div class="w3-modal-content" style="padding:32px">
@@ -109,9 +119,9 @@ img {margin-bottom: -7px}
 <!-- !PAGE CONTENT! -->
 <form name="content" class="w3-main w3-content w3-padding" style="max-width:1300px;margin-top:10px" method=post>{% csrf_token %}
   {% if gifs %}
-    <div class="w3-row-padding w3-center " id="food">
+    <div class="w3-row-padding w3-center" id="food" >
     {% for gif in gifs.all %}
-      <div class="w3-quarter w3-mobile">
+      <div class="w3-quarter w3-mobile" style="margin-top:10px">
         <div class="w3-card-4">
           <div class="w3-container w3-red w3-text-white">
             <h3>{{ gif.name }}</h3> 
