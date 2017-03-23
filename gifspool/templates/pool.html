@@ -1,4 +1,4 @@
-<!DOCTYP HTML>
+<!DOCTYPE HTML>
 <html>
 <title>gifsta</title>
 <meta charset="UTF-8">
@@ -18,9 +18,20 @@ img {margin-bottom: -7px}
 <!-- Topbar -->
 <div class="w3-bar w3-red" id="topbar">
   
-  <div class="w3-bar w3-bar-item w3-padding-0" style="width:45.0%">
+  <div class="w3-bar w3-bar-item w3-padding-0">
     <button class="w3-bar-item w3-hover-green">Menu</button>
     <button class="w3-bar-item w3-hover-green w3-{{show.1}}" onclick="document.getElementById('upload').style.display='block'">Upload</button>
+  </div>
+
+  <div class="w3-dropdown-hover w3-hide-small w3-bar-item w3-left w3-padding-0">
+    <button class="w3-button" title="Notifications">Categories <i class="fa fa-caret-down"></i></button>     
+    <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+      {% if categories %}
+        {% for category in categories.all %}
+          <a href="/{{ category.name }}" class="w3-bar-item w3-button">{{ category.name }}</a>
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
 
   <div class="w3-bar w3-bar-item w3-padding-0" style="width:33.3%">
@@ -96,23 +107,23 @@ img {margin-bottom: -7px}
 
 
 <!-- !PAGE CONTENT! -->
-<form name="content" class="w3-main w3-content w3-padding" style="max-width:1300px;margin-top:100px" method=post>{% csrf_token %}
+<form name="content" class="w3-main w3-content w3-padding" style="max-width:1300px;margin-top:10px" method=post>{% csrf_token %}
   {% if gifs %}
-    
     <div class="w3-row-padding w3-center " id="food">
     {% for gif in gifs.all %}
-      <div class="w3-quarter w3-mobile w3-padding-8">
+      <div class="w3-quarter w3-mobile">
         <div class="w3-card-4">
-          <div class="w3-container w3-light-green w3-text-white">
-            <h3>{{ gif.name }}</h3> <!-- The Perfect Sandwich, A Real NYC Classic -->
+          <div class="w3-container w3-red w3-text-white">
+            <h3>{{ gif.name }}</h3> 
           </div>
-          <img class="w3-margin" src="/media/{{ gif.gif_file }}" style= "height: 150px">
+          <img class="w3-margin" src="{{ gif.gif_file.url }}" style= "height: 150px">
           <div class="w3-container">
-            <p>{{ gif.tags }}</p> <!-- Just some random text, lorem ipsum text praesent tincidunt ipsum lipsum. -->
+            <p>{{ gif.tags }}</p>
           </div>
-          <button type="submit" name="test" class="w3-button w3-green w3-block" value={{gif.id}}>Start</button>
+          <button type="submit" name="test" class="w3-button w3-red w3-block w3-hover-green" value={{gif.id}}>Start</button>
         </div>
       </div>
     {% endfor %}
-    </div>  {% endif %}
-  </form>
+    </div>  
+  {% endif %}
+</form>
