@@ -17,10 +17,10 @@ class Pool(View):
         if request.user.is_authenticated:
             
             show = ('hide', 'show')
-            return render(request, "pool.html", {"authenticated":request.user, "show":show, "gifs":gifs})
+            return render(request, "index.html", {"authenticated":request.user, "show":show, "gifs":gifs})
         else:
             # return HttpResponse(show)
-            return render(request, "pool.html", {"authenticated":"False", "show":show, "gifs":gifs})
+            return render(request, "index.html", {"authenticated":"False", "show":show, "gifs":gifs})
     def post(self, request):
         if request.POST.get('submit') == 'register':
             register_form = RegisterForm(request.POST)
@@ -32,13 +32,13 @@ class Pool(View):
                 email = register_form.cleaned_data['email']
                 is_not = is_notVerifyed(username, password, confirm, email, User)
                 if is_not:
-                    return render(request, "pool.html", is_not)
+                    return render(request, "index.html", is_not)
                 else:
                     user = User.objects.create_user(username=username, password=password, email=email)
                     user.save()
                     login(request, user, 'django.contrib.auth.backends.ModelBackend')
                     return redirect("/")
-            return render(request, "pool.html", is_not)
+            return render(request, "index.html", is_not)
 
         elif request.POST.get('submit') == 'login':
             username = request.POST['username']
@@ -48,7 +48,7 @@ class Pool(View):
                 login(request, user)
                 return redirect("/")
             elif user is None:
-                return render(request, "pool.html", {})
+                return render(request, "index.html", {})
 
         # elif request.POST.get('submit') == 'logout':
         #     logout(request)
@@ -70,7 +70,7 @@ class Pool(View):
                     return redirect("/")
                 return HttpResponse(upload_form)
             else:
-                return render(request, "pool.html", {"authenticated":"False"})
+                return render(request, "index.html", {"authenticated":"False"})
 
 class Logout(View):
     def get(self, request):

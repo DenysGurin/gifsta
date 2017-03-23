@@ -1,0 +1,15 @@
+
+  {
+    "id": 1,
+    "title": "title1",
+    "url": "/single-2.html",
+    "jpg": "img/cat.jpg",
+    "shoked": "3232",
+    "loved": "32232",
+    "funny": "232",
+    "source": "nhl.com",
+    "relatedImg1": "img/200.jpg",
+    "relatedUrl1": "simple-2.html",
+    "relatedImg2": "img/400.jpg",
+    "relatedUrl2": "simple-2.html"
+  }
