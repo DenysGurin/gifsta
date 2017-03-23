@@ -40,15 +40,15 @@ class Pool(View):
                     return redirect("/")
             return render(request, "index.html", is_not)
 
-        elif request.POST.get('submit') == 'login':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect("/")
-            elif user is None:
-                return render(request, "index.html", {})
+        # elif request.POST.get('submit') == 'login':
+        #     username = request.POST['username']
+        #     password = request.POST['password']
+        #     user = authenticate(username=username, password=password)
+        #     if user is not None:
+        #         login(request, user)
+        #         return redirect("/")
+        #     elif user is None:
+        #         return render(request, "index.html", {})
 
         # elif request.POST.get('submit') == 'logout':
         #     logout(request)
@@ -76,3 +76,17 @@ class Logout(View):
     def get(self, request):
         logout(request)
         return redirect("/")
+
+class Login(View):
+    def get(slef, request):
+        return render(request, "login.html", {})
+    def post(slef, request):
+        if request.POST.get('submit') == 'login':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("/")
+            elif user is None:
+                return render(request, "index.html", {})

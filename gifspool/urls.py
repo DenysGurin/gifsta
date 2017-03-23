@@ -5,6 +5,7 @@ from . import views
 app_name = 'gifspool'
 urlpatterns = [
     url(r'^$', views.Pool.as_view(), name='gifspool'),
+    url(r'^login/', views.Login.as_view(), name='login'),
     url(r'^logout/', views.Logout.as_view(), name='logout'),
     # url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
     # url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),

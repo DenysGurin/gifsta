@@ -123,8 +123,8 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_FACEBOOK_KEY = '170616766788089'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '904a30830aea492f722a7e47598a5bdb'  # App Secret
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '506326838699-avjbddapvc2d7jbk8gohv75rnlresgod.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'Nr2pm6Cehj0CacZPaUufwVzZ'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '99605784614-fobkffkss9gtif3n0tp5ntmtqq0ug0nm.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'tSklgCXqjMnPKsOSdh_yo2nQ'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
