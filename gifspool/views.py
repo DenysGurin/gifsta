@@ -6,6 +6,7 @@ from django.views.generic.base import View
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from PIL import Image
 
 from .verification import is_notVerifyed
 from .forms import PoolForm, RegisterForm, UploadForm
@@ -80,6 +81,10 @@ class Pool(View):
                     tags = upload_form.cleaned_data['tags']
                     gif_file = upload_form.cleaned_data['gif_file']
                     gif = Gif.objects.create(creator=request.user, name=name, tags=tags, gif_file=gif_file)
+                    # return HttpResponse(request.FILES['gif_file'].name)
+                    # jpg = Image(gif_file.name)
+                    # jpg.save(gif_file.name.split('.')[0]+'.jpg')
+                    # return HttpResponse(jpg.__dict__)
                     Pool.queue.add(gif)
                     gif.save()
                     
