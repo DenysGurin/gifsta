@@ -65,10 +65,10 @@ class Pool(View):
                     name = upload_form.cleaned_data['name']
                     tags = upload_form.cleaned_data['tags']
                     gif_file = upload_form.cleaned_data['gif_file']
-                    return HttpResponse(request.FILES)
+                    #return HttpResponse(request.FILES)
                     jpg_file = Image.open(gif_file)
                     jpg_file.save("outfile.jpg")
-                    gif = Gif.objects.create(user=request.user, creator=creator, name=name, tags=tags, gif_file=gif_file, jpg_file=jpg_file)
+                    gif = Gif.objects.create(user=request.user, creator=creator, name=name, tags=tags, gif_file=gif_file)
                     gif.save()
                     
                     return redirect("/")
