@@ -22,3 +22,4 @@ class Gif(models.Model):
 	likes = models.TextField(default='', blank = True)	
 	post_to = models.BooleanField(default=False)
 	gif_file = models.FileField(upload_to=user_directory_path)
+	jpg_file = models.FileField(upload_to=user_directory_path)
