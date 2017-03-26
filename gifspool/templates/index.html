@@ -71,7 +71,7 @@
 					<li id="grid-item" data-gif-id="1">
 						<div class="gif_wrapper">
 							<div class="gif_viewer">
-								<a href="single.html">
+								<a href="{% url 'gifspool:onegif' gif.id %}">
 									<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file.url }}">
 									<ins class="play-gif"></ins>
 									<span class="spinner"></span>
@@ -79,7 +79,7 @@
 							</div>
 							<div class="gif_description">
 								<div class="description__title">
-									<a href="single.html">{{ gif.name }}</a>
+									<a href="{% url 'gifspool:onegif' gif.id %}">{{ gif.name }}</a>
 								</div>
 								<div class="description__heart">
 									<ul class="gif_drop-mnu">

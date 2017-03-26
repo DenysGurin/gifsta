@@ -57,7 +57,7 @@
 		</div>
 	</header>
 
-	<form action="{% url 'gifspool:like' gif.id %}" method="post">{% csrf_token %}>
+	<main>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12" id="single_gifs">
@@ -65,7 +65,7 @@
 						<div class="single-gif_wrapper">
 							<div class="single-gif_viewer" data-url="/single.html">
 								<ins class="play-gif"></ins>
-								<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file.url }}" data-original-width="200" data-original-height="200">
+								<img class="gifplayer" src="/static/img/200.jpg" alt="" data-original-width="200" data-original-height="200">
 								<span class="spinner"></span>
 							</div>
 							<div class="single-social_wprapper">

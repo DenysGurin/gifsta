@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.views.generic.base import View
+from django.views import View
+from django.views.generic.detail import DetailView
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+
 from PIL import Image
 
 from .verification import is_notVerifyed
+
 from .forms import PoolForm, RegisterForm, UploadForm
 from .models import Gif
 
@@ -66,9 +69,7 @@ class Pool(View):
                     tags = upload_form.cleaned_data['tags']
                     gif_file = upload_form.cleaned_data['gif_file']
                     #return HttpResponse(request.FILES)
-                    jpg_file = Image.open(gif_file)
-                    jpg_file.save("outfile.jpg")
-                    gif = Gif.objects.create(user=request.user, creator=creator, name=name, tags=tags, gif_file=gif_file)
+                    gif = Gif.objects.create(creator=creator, name=name, tags=tags, gif_file=gif_file)
                     gif.save()
                     
                     return redirect("/")
@@ -86,11 +87,20 @@ class Login(View):
         return render(request, "login.html", {})
     def post(slef, request):
         if request.POST.get('submit') == 'login':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid:
+                username = login_form.cleaned_data['username']
+                password = login_form.cleaned_data['password']
+                user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect("/")
             elif user is None:
                 return render(request, "index.html", {})
+
+class OneGif(DetailView):
+    model = Gif
+    template_name = 'single.html'
+
+def like(request):
+    pass
