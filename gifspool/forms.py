@@ -4,7 +4,9 @@ from .models import Gif
 
 
 class LoginForm(forms.Form):
-	pass
+	class Meta:
+		model = User
+		fields = ['username', 'password', ]
 
 class RegisterForm(forms.ModelForm):
 	confirm = forms.CharField(max_length=100)

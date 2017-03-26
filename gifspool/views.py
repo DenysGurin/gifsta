@@ -61,9 +61,11 @@ class Pool(View):
             return render(request, "pool.html", is_not)
 
         elif request.POST.get('submit') == 'login':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid:
+                username = login_form.cleaned_data['username']
+                password = login_form.cleaned_data['password']
+                user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect("/")
