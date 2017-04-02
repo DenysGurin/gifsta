@@ -19,6 +19,19 @@ class Gif(models.Model):
 	name = models.CharField(max_length=30)
 	tags = models.CharField(max_length=300)
 	upload_date = models.DateTimeField(auto_now_add=True)
-	likes = models.TextField(default='', blank = True)	
+	likes_by = models.TextField(default='', blank = True)
+	likes = models.IntegerField(default=0)
+	shocked = models.IntegerField(default=0)
+	loved = models.IntegerField(default=0)
+	laugh = models.IntegerField(default=0)
 	post_to = models.BooleanField(default=False)
 	gif_file = models.FileField(upload_to=user_directory_path)
+
+class Like(models.Model):
+	gif_id = models.ForeignKey(Gif, on_delete=models.CASCADE, blank=True,
+    null=True,)
+	user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,
+    null=True,)
+	shocked = models.BooleanField(default=False)
+	loved = models.BooleanField(default=False)
+	laugh = models.BooleanField(default=False)

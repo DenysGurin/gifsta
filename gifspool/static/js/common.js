@@ -551,4 +551,12 @@ $(document).ready(function() {
 		}
 	}
 
+	$(".login_wrap #btn-login").magnificPopup({
+		type:"inline",
+		mainClass: 'mfp-forms',
+		focus: '#username',
+		preloader: false,
+		overflowY: 'hidden'
+	});
+
 });
