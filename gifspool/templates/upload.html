@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+	
+	<!-- Login -->
+	<form id="login" class="w3-container" method="post" enctype="multipart/form-data">{% csrf_token %}
+	    
+	      
+	      <h2 class="w3-wide">LOGIN</h2>
+	      
+	      <p><input class="w3-input w3-border" id="name" type="text" name="name" placeholder="Enter name"></p>
+	      <p><input class="w3-input w3-border" id="tags" type="text" name="tags" placeholder="Enter tags"></p>
+	      <p><input class="w3-input w3-border" id="gif_file" type="file" name="gif_file" placeholder="Enter gif_file"></p>
+	      <button class="w3-button w3-block w3-padding-large w3-red w3-hover-green w3-margin-bottom" type="submit" name="submit" value="upload">Upload</button>
+	</form>
+{% endblock %}

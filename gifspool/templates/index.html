@@ -9,12 +9,16 @@
 			<div class="row grid">
 				
 				<ul class="grid" id="grid">
-					{% for gif in gifs.all %}
+					{% for gif in gifs %}
 					<li id="grid-item" data-gif-id="1">
 						<div class="gif_wrapper">
 							<div class="gif_viewer">
 								<a href="{% url 'gifspool:onegif' gif.id %}">
-									<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file.url }}">
+									{% if use_cache %}
+										<img class="gifplayer" src="/media/{{ gif.gif_file }}" alt="{{ gif.gif_file }}">
+									{% else %}
+										<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file }}">
+									{% endif %}
 									<ins class="play-gif"></ins>
 									<span class="spinner"></span>
 								</a>
