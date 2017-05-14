@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main>
+		<section class="section--login">			
+			<div id="login-form" class="forms tabs">
+				<input id="tab1" type="radio" name="tabs" checked>
+				<label for="tab1">Вход</label>			
+				<input id="tab2" type="radio" name="tabs">
+				<label for="tab2">Регистрация</label>				
+				<div class="tab" id="content1">
+					<form method="post">{% csrf_token %}
+
+						<input type="hidden" name="token" value="">   
+
+						<p><input type="text" id="username" name="username" placeholder="Enter username"></p>
+						<p><input type="password" id="password" name="password" placeholder="Enter password"></p>
+						<button class="btn btn-main" type="submit" name="submit" value="login">Войти</button>
+
+					</form>
+				</div>
+				<div class="tab" id="content2">
+
+					<form method="post">{% csrf_token %}
+
+						<input type="hidden" name="token" value="">
+
+						<p><input type="text" id="username" name="username" placeholder="Enter username"></p>
+						<p><input type="password" id="password" name="password" placeholder="Enter password"></p>
+						<p><input type="password" id="confirm" name="confirm" placeholder="Confirm password"></p>
+						<p><input type="email" id="email" name="email" placeholder="Enter E-mail"></p>
+						<button class="btn btn-main" type="submit" name="submit" value="register">Зарегистрировать</button>
+
+					</form>
+				</div>
+				<hr>
+				<div class="soc-btn_wrap">
+					<a class="btn btn-facebook" href="{% url 'social:begin' 'facebook' %}"><i class="fa fa-facebook"></i><span>Facebook</span></a>
+					<a class="btn btn-google" href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa fa-google-plus"></i><span>Google</span></a>
+					<a class="btn btn-vkontakte" href="{% url 'social:begin' 'vk-oauth2' %}"><i class="fa fa-vk"></i><span>Vkontakte</span></a>
+				</div>
+
+			</div>
+		</section>
+</main>
+
+
+{% endblock %}

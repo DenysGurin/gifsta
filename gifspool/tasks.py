@@ -1,11 +1,16 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
+import os
+
+
 from django.conf import settings
 from django.http import HttpResponse
 from celery.task.schedules import crontab
 # from .views import gifs_queue
 from .models import Gif
+from .make_media import gif_to_jpg, gif_to_mp4
+
 from datetime import timedelta
 from gifsta.celery import app
 
@@ -28,26 +33,22 @@ def run_loop():
     print (cache.get('gif_queue'))
 
 @shared_task()
-def gif_to_jpg(path):
+def task_gif_to_jpg(path):
+    
     print (settings.MEDIA_ROOT)
     print (path)
-    new_path = path.split('.')[0]
-    im = Image.open(path)
-    bg = Image.new("RGB", im.size, (255,255,255))
-    bg.paste(im, (0,0))
-    bg.save("%s.jpg"%new_path, quality=95)
+    new_path = os.path.splitext(path)[0]
+    gif_to_jpg(path, new_path)
 
 @shared_task()
-def gif_to_mp4(path):
-    new_path = path.split('.')[0]
-    try:
-        clip = mp.VideoFileClip(path)
-        clip.write_videofile("%s.mp4"%new_path)
-    except OSError:
-        pass
+def task_gif_to_mp4(path):
+
+    new_path = os.path.splitext(path)[0]
+    gif_to_mp4(path, new_path)
 
 @shared_task()
-def add_to_cache(gif_id):
+def task_add_to_cache(gif_id):
+
     gif_queue = cache.get("gif_queue")
     if not gif_queue:
         cache.set("gif_queue", [gif_id], timeout=None)

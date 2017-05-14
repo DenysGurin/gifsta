@@ -1,0 +1,22 @@
+<a id="ajax-text-me">Push me</a>
+<div id="more-text-here1"></div>
+
+<div id="more-text-here2"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#ajax-text-me").click(function() {
+			$.ajax({
+				type: 'GET',
+				async: true,
+				url: '/add_ajax/',
+				data: "param1=value1&param2=value2;",
+				success: function(data) {
+					$("#more-text-here1").append(data['first-text']);
+					$("#more-text-here1").append(data['second-text']);
+				},
+				datatype: 'json',
+			});
+		});
+	});
+</script>

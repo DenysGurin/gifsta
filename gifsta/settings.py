@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gifspool',
     'social_django',
+    # 'social_auth,'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,9 @@ TEMPLATES = [
     },
 ]
 
+
+
+
 WSGI_APPLICATION = 'gifsta.wsgi.application'
 
 
@@ -92,15 +96,23 @@ DATABASES = {
     }
 }
 
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/home/denys/projects/gifsta",
     }
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -123,6 +135,11 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.vk.VKOAuth2'    
+
+    # 'social_auth.backends.facebook.FacebookBackend',
+    # 'social_auth.backends.contrib.vk.VKOAuth2Backend',
+    # 'social_auth.backends.google.GoogleOAuth2Backend',
 )
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -132,9 +149,13 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_FACEBOOK_KEY = '170616766788089'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '904a30830aea492f722a7e47598a5bdb'  # App Secret
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '99605784614-fobkffkss9gtif3n0tp5ntmtqq0ug0nm.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'tSklgCXqjMnPKsOSdh_yo2nQ'
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1030387813276-guf0v3h4k45tl06bet5d3o9hnrjvpsmu.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET= '7PSeS9R2Bpb6iu91FOWQVNyM'
+
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = 'aP2W5cG2inSiORz6lOWS'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = '3ca99efb3ca99efb3ca99efb0c3cf59d5133ca93ca99efb65be850afdabf5957d922525'
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 

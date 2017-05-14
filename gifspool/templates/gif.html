@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% include "base.html" %}
+
+
+
+{% block content %}
+
+	<main>
+
+		<section class="section--single-gif">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="gif_wrapper" id="single_gif">
+							<div class="gif_viewer">
+								<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file.url }}">
+							</div>
+							<div class="gif_item_wrap">
+								<span class="all_likes">
+									<i class="fa fa-heart"></i><span>{{ gif.likes }}</span>
+								</span>
+								<ul class="emoji_heart">
+									<form method="post">{% csrf_token %}
+										<li data-action="shocked">
+											<a href="{% url 'gifspool:shocked' gif.id %}" style="text-decoration: none">
+												<img src="/static/img/emoji/shocked.svg" alt="">
+												<span>{{ gif.shocked }}</span>
+											</a>
+										</li>
+										<li data-action="loved">
+											<a href="{% url 'gifspool:loved' gif.id %}" style="text-decoration: none">
+												<img src="/static/img/emoji/loved.svg" alt="">
+												<span>{{ gif.loved }}</span>
+											</a>
+										</li>
+										<li data-action="laugh">
+											<a href="{% url 'gifspool:laugh' gif.id %}" style="text-decoration: none">
+												<img src="/static/img/emoji/funny.svg" alt="">
+												<span>{{ gif.laugh }}</span>
+											</a>
+										</li>
+									</form>
+								</ul>				
+							</div>
+							<div class="gif_item__wrap_share">
+								<span class="gif_item_share">
+									<i class="fa fa-share-alt"></i>										
+								</span>
+								<ul class="share_gif">
+									<li data-share="facebook">
+										<a class="soc_facebook" href="#"><i class="fa fa-facebook"></i></a>
+									</li>
+									<li data-share="twitter">
+										<a class="soc_twitter" href="#"><i class="fa fa-twitter"></i></a>
+									</li>
+									<li data-share="vkontakte">
+										<a class="soc_vkontakte" href="#"><i class="fa fa-vk"></i></a>
+									</li>
+									<li data-share="copy">
+										<a class="soc_copy" href="#"><i class="fa fa-link"></i></a>
+									</li>
+								</ul>
+							</div>
+							<div class="gif_item_info">
+								<div class="gif_item_meta">
+									{{ gif.name }}
+								</div>
+								<div class="gif_item_view">
+									<i class="fa fa-eye"></i> <span>4363 просмотра</span>
+								</div>
+								<div class="gif_item_tags">
+									<span>
+										Теги:
+									</span>
+									{% for hashtag in gif.hashtags.all %}
+										<a href="{{ hashtag }}">{{ hashtag }}</a>
+									{% endfor %}
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section--related">
+			<div class="container">
+				<div class="row">
+				{% for gif in related %}
+					<div class="col-md-3 col-sm-6 col-xs-12">
+					
+						<div id="grid-item">
+							<div class="gif_wrapper">
+								<div class="gif_viewer">
+									<a href="{% url 'gifspool:onegif' gif.id %}">
+										{% if use_cache %}
+											<img class="gifplayer" src="/media/{{ gif.gif_file }}" alt="{{ gif.gif_file }}">
+										{% else %}
+											<img class="gifplayer" src="{{ gif.gif_file.url }}" alt="{{ gif.gif_file }}">
+										{% endif %}
+										<ins class="play-gif"></ins>
+										<span class="spinner"></span>
+									</a>
+								</div>
+								<div class="gif_item_info">
+									<ul class="gif_item_wrap">
+										<li class="gif_item_emoji">
+											<i class="fa fa-heart"></i><span>{{ gif.likes }}</span>
+											<ul class="emoji_heart">
+												<form method="post">{% csrf_token %}
+													<li data-action="shocked">
+														<a href="{% url 'gifspool:shocked' gif.id %}" style="text-decoration: none">
+															<img src="/static/img/emoji/shocked.svg" alt="">
+															<span>{{ gif.shocked }}</span>
+														</a>
+													</li>
+													<li data-action="loved">
+														<a href="{% url 'gifspool:loved' gif.id %}" style="text-decoration: none">
+															<img src="/static/img/emoji/loved.svg" alt="">
+															<span>{{ gif.loved }}</span>
+														</a>
+													</li>
+													<li data-action="laugh">
+														<a href="{% url 'gifspool:laugh' gif.id %}" style="text-decoration: none">
+															<img src="/static/img/emoji/funny.svg" alt="">
+															<span>{{ gif.laugh }}</span>
+														</a>
+													</li>
+												</form>
+											</ul>
+										</li>
+										<li class="gif_item_view">
+											<i class="fa fa-eye"></i><span>4363</span>
+										</li>
+										<li class="gif_item_share">
+											<i class="fa fa-paper-plane"></i>
+											<ul class="share_gif">
+												<li data-share="facebook">
+													<a class="soc_facebook" href="#"><i class="fa fa-facebook"></i></a>
+												</li>
+												<li data-share="twitter">
+													<a class="soc_twitter" href="#"><i class="fa fa-twitter"></i></a>
+												</li>
+												<li data-share="vkontakte">
+													<a class="soc_vkontakte" href="#"><i class="fa fa-vk"></i></a>
+												</li>
+												<li data-share="copy">
+													<a class="soc_copy" href="#"><i class="fa fa-link"></i></a>
+												</li>
+											</ul>
+										</li>
+									</ul>
+									<div class="gif_item_meta">
+										<a href="{% url 'gifspool:onegif' gif.id %}">{{ gif.name }}</a>
+									</div>
+									<div class="gif_item_tags">
+										<span>
+										Теги:
+										</span>
+										{% for hashtag in gif.hashtags.all %}
+											<a href="search/?tags={{ hashtag.hashtag }}">{{ hashtag }}</a>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					
+					</div>
+				{% endfor %}
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<div class="single-post_nav">
+		{% if prev_gif %}
+			<a href="/{{ prev_gif.pk }}/" class="post-prev"><i class="fa fa-long-arrow-left"></i>
+				<img class="gifplayer" src="{{ prev_gif.gif_file.url }}" alt="{{ prev_gif.gif_file.url }}">
+			</a>
+		{% endif %}
+		{% if next_gif %}
+			<a href="/{{ next_gif.pk }}/" class="post-next"><i class="fa fa-long-arrow-right"></i>
+				<img class="gifplayer" src="{{ next_gif.gif_file.url }}" alt="{{ next_gif.gif_file.url }}">
+			</a>
+		{% endif %}
+	</div>
+
+
+
+{% endblock %}
