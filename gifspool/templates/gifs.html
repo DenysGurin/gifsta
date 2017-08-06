@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <section class="section--grid">
+        <div class="container-fluid">
+        {% if pags %}
+            <div class="row grid">
+                <div class="grid" id="grid">
+                    {% for gif in pags %}
+                    <div id="grid-item">
+                        <div class="gif_wrapper">
+                            <div class="gif_viewer">
+                                <a href="{% url 'gifspool:gifs' gif.id gif.name %}">
+                                    {% if use_cache %}
+                                        <img class="gifplayer" src="{{ gif.jpg_url }}" alt="{{ gif.jpg_url }}">
+                                        
+                                    {% else %}
+                                        <img class="gifplayer" src="{{ gif.jpg_url }}" alt="{{ gif.jpg_url }}">
+                                        
+                                    {% endif %}
+                                    <ins class="play-gif"></ins>
+                                    <span class="spinner"></span>
+                                </a>
+                            </div>
+                            <div class="gif_item_info">
+                                <ul class="gif_item_wrap">
+                                    <li class="gif_item_emoji">
+                                        <i class="fa fa-heart"></i><span class="fa_fa-heart">{{ gif.likes }}</span>
+                                        <ul class="emoji_heart">
+                                            <form method="post">{% csrf_token %}
+                                                <li data-action="shocked">
+                                                    <!-- <a href="{% url 'gifspool:shocked' gif.id gif.name %}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/shocked.svg" alt="">
+                                                        <span>{{ gif.shocked }}</span>
+                                                    </a> -->
+                                                    <a class="shocked" gif_id="{{ gif.id }}" gif_name="{{ gif.name }}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/shocked.svg" alt="">
+                                                        <span class="shocked_num">{{ gif.shocked }}</span>
+                                                    </a>
+                                                </li>
+                                                <li data-action="loved">
+                                                    <!-- <a href="{% url 'gifspool:loved' gif.id gif.name %}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/loved.svg" alt="">
+                                                        <span>{{ gif.loved }}</span>
+                                                    </a> -->
+                                                    <a class="loved" gif_id="{{ gif.id }}" gif_name="{{ gif.name }}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/loved.svg" alt="">
+                                                        <span class="loved_num">{{ gif.loved }}</span>
+                                                    </a>
+                                                </li>
+                                                <li data-action="laugh">
+                                                    <!-- <a href="{% url 'gifspool:laugh' gif.id gif.name %}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/funny.svg" alt="">
+                                                        <span>{{ gif.laugh }}</span>
+                                                    </a> -->
+                                                    <a class="laugh" gif_id="{{ gif.id }}" gif_name="{{ gif.name }}" style="text-decoration: none">
+                                                        <img src="/static/img/emoji/funny.svg" alt="">
+                                                        <span class="laugh_num">{{ gif.laugh }}</span>
+                                                    </a>
+                                                </li>
+                                            </form>
+                                        </ul>
+                                    </li>
+                                    <li class="gif_item_view">
+                                        <i class="fa fa-eye"></i><span class="fa_fa-eye">{{ gif.views }}</span>
+                                    </li>
+                                    <li class="gif_item_share">
+                                        <i class="fa fa-paper-plane"></i>
+                                        <ul class="share_gif">
+                                            <li data-share="facebook">
+                                                <a class="soc_facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                            </li>
+                                            <li data-share="twitter">
+                                                <a class="soc_twitter" href="#"><i class="fa fa-twitter"></i></a>
+                                            </li>
+                                            <li data-share="vkontakte">
+                                                <a class="soc_vkontakte" href="#"><i class="fa fa-vk"></i></a>
+                                            </li>
+                                            <li data-share="copy">
+                                                <a class="soc_copy" href="#"><i class="fa fa-link"></i></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <div class="gif_item_meta">
+                                    <a href="{% url 'gifspool:onegif' gif.id gif.name %}">{{ gif.name }}</a>
+                                </div>
+                                <div class="gif_item_tags">
+                                    <span>
+                                        Теги:
+                                    </span>
+                                    {% for hashtag in gif.hashtags.all %}
+                                        <a href="search?tags=%23{{ hashtag.hashtag }}">#{{ hashtag }}</a>
+                                    {% endfor %}
+                                </div>
+                                <!-- <div>
+                                    <form action="/gifs/" method="post">{% csrf_token %}
+                                        <input type="hidden" name="gif_id" value={{gif.id}}>
+                                        <input type="hidden" name="gif_hashtags" value={{gif.hashtags}}>
+                                        <input type="submit" name="submit" value="info">
+                                    </form>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+        
+            </div>
+        {% endif %}
+        </div>
+    </section>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if pags.has_previous %}
+                <a href="?page={{ pags.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ pags.number }} of {{ pags.paginator.num_pages }}.
+            </span>
+
+            {% if pags.has_next %}
+                <a href="?page={{ pags.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".shocked").click(function() {
+            var gif_id;
+            var gif_name;
+            var url;
+            gif_id = $(this).attr("gif_id");
+            gif_name = $(this).attr("gif_name");
+            url = "/likes_ajax/"
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'pk': gif_id,
+                    'name': gif_name,
+                    'index': 'shocked',
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+                success: function(data) {
+                    if(data['authenficated'] == 'False'){
+                        window.location.replace('/login/')
+                    }
+                    $(".shocked_num").text(data['shocked']);
+                    $(".laugh_num").text(data['laugh']);
+                    $(".loved_num").text(data['loved']);
+                    $(".fa_fa-heart").text(data['likes']);
+                    $(".fa_fa-eye").text(data['views']);
+                },
+                datatype: 'json',
+            });
+        });
+        $(".laugh").click(function() {
+            var gif_id;
+            var gif_name;
+            var url;
+            gif_id = $(this).attr("gif_id");
+            gif_name = $(this).attr("gif_name");
+            url = "/likes_ajax/"
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'pk': gif_id,
+                    'name': gif_name,
+                    'index': 'laugh',
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+                success: function(data) {
+                    if(data['authenficated'] == 'False'){
+                        window.location.replace('/login/')
+                    }
+                    $(".shocked_num").text(data['shocked']);
+                    $(".laugh_num").text(data['laugh']);
+                    $(".loved_num").text(data['loved']);
+                    $(".fa_fa-heart").text(data['likes']);
+                    $(".fa_fa-eye").text(data['views']);
+                },
+                datatype: 'json',
+            });
+        });
+        $(".loved").click(function() {
+            var gif_id;
+            var gif_name;
+            var url;
+            gif_id = $(this).attr("gif_id");
+            gif_name = $(this).attr("gif_name");
+            url = "/likes_ajax/"
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {'pk': gif_id,
+                    'name': gif_name,
+                    'index': 'loved',
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+                success: function(data) {
+                    if(data['authenficated'] == 'False'){
+                        window.location.replace('/login/')
+                    }
+                    $(".shocked_num").text(data['shocked']);
+                    $(".laugh_num").text(data['laugh']);
+                    $(".loved_num").text(data['loved']);
+                    $(".fa_fa-heart").text(data['likes']);
+                    $(".fa_fa-eye").text(data['views']);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+

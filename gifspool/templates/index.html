@@ -11,7 +11,7 @@
                     <div id="grid-item">
                         <div class="gif_wrapper">
                             <div class="gif_viewer">
-                                <a href="{% url 'gifspool:onegif' gif.id gif.name %}">
+                                <a href="{% url 'gifspool:gifs' gif.id gif.name %}">
                                     {% if use_cache %}
                                         <img class="gifplayer" src="{{ gif.jpg_url }}" alt="{{ gif.jpg_url }}">
                                         

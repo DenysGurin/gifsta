@@ -1,6 +1,7 @@
 import random
 import re
 import json
+import os
 from datetime import datetime, timedelta, timezone
 
 try:
@@ -15,11 +16,13 @@ from django.views.generic.detail import DetailView
 from django.conf import settings
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.db.models.query import QuerySet
+
+
 from PIL import Image
 
 from .verification import is_notVerifyed
@@ -34,7 +37,8 @@ try:
 except:
     pass
 
-from django.core.cache import cache
+from django.core import serializers
+#from django.core.cache import cache
 from django.db.models import F, Q
 
 # gifs_queue = GifsQueue()
@@ -80,6 +84,27 @@ class Pool(MyView):
             pags = paginator.page(paginator.num_pages)
         self.context["pags"] = pags
 
+    def make_linked_list(self, request, gifs_list):
+        gifs = gifs_list
+        print(gifs.count())
+        linked_list = {}
+        prev_gif = None
+        next_gif = None
+        for gif in gifs:
+            if prev_gif == None:
+                linked_list[gif.id] = {"prev_gif": None, "next_gif": None}
+                prev_gif = gif
+                next_gif = gif
+            else:
+                linked_list[prev_gif.id]["prev_gif"] = {"pk": gif.id, "name": gif.name, "gif_url": gif.gif_file.url}
+                linked_list[gif.id] = {"prev_gif": None, "next_gif": {"pk": prev_gif.id, "name": prev_gif.name, "gif_url": prev_gif.gif_file.url}}
+                prev_gif = gif
+                next_gif = gif
+
+
+        request.session["gifs_linked_list"] = linked_list
+        # request.session["gifs"] = serializers.serialize("json", self.context['gifs'], fields = (id,))
+
     def update_cache(self):
         try:
             if not cache.get('gifs') or cache.get('to_update') == True:
@@ -103,28 +128,25 @@ class Pool(MyView):
         Pool.update_cache(self)
         Pool.is_authenticated(self, request)
         Pool.make_pagination(self, request, self.context["gifs"], 20)
-        
-        return render(request, "index.html", self.context)
+        try:
+            del request.session["gifs_linked_list"]
+        except KeyError:
+            pass
+        Pool.make_linked_list(self, request, self.context["gifs"])
+        response = render(request, "index.html", self.context)
+        response.delete_cookie('hui')
+
+        return response
 
     def post(self, request):
 
         if request.POST.get('submit') == 'search':
             tags =  request.POST.get('tags').replace(" ", "+").replace("#", "%23")
+
             return redirect("/search?tags=%s"% tags)
 
         if request.POST.get('submit') == 'info':
-            return redirect("/gifs")
-
-
-class Gifs(View):
-
-    def get(self, request):
-
-        return HttpResponse(request.GET.get("info"))   
-
-    def post(self, request):
-
-        return HttpResponse({"gif_id":request.POST.get("gif_id"), "gif_hashtags":request.POST.get("gif_id")})          
+            return redirect("/gifs")       
 
 
 class Upload(MyView):
@@ -140,8 +162,6 @@ class Upload(MyView):
                 hashtag_obj = Hashtag.objects.create(hashtag = tag)
 
             GifHashtagLinker.objects.create(hashtag = hashtag_obj, gif=gif_obj)
-
-
 
     def get(self, request):
 
@@ -176,7 +196,6 @@ class Upload(MyView):
             return HttpResponse("upload form isn't valid")
             
 
-
 class Logout(MyView):
 
     def get(self, request):
@@ -192,7 +211,6 @@ class Login(MyView):
 
         Login.is_authenticated(self, request)
         return render(request, "login.html", self.context)
-
 
     def post(self, request):
 
@@ -244,10 +262,9 @@ class CategoriesGifs(Pool):
         return render(request, "index.html", self.context)
     
 
-
 class Tags(Pool):
 
-    def find_brute(tags=None):
+    def find_brute(tags=None, gif_object=None):
         print(type(tags))
         if isinstance(tags, list):
             q_object = Q()
@@ -255,6 +272,7 @@ class Tags(Pool):
                 tag = tag[1:]
                 q_object |= Q(hashtag = tag)
             hashtag_set = Hashtag.objects.filter(q_object)
+            
         elif isinstance(tags, QuerySet):
             if tags.count() < 1:
                 return tags
@@ -268,13 +286,14 @@ class Tags(Pool):
         q_object = Q()
         for linker in linkers:
             q_object |= Q(gifhashtaglinker = linker.id)
+            if gif_object:
+                q_object &= ~Q(id = gif_object.id)
         gifs = Gif.objects.filter(q_object).order_by('-upload_date')
         
         return gifs
 
     def get(self, request):
     # def get(self, request, tags):
-
         self.context['gifs'] = None
         tags = re.findall(r'\#\w+', request.GET.get('tags'))
         # tags = re.findall(r'\#\w+', tags)
@@ -285,9 +304,17 @@ class Tags(Pool):
             
             self.context['gifs'] = gifs
             Tags.is_authenticated(self, request)
-            Pool.make_pagination(self, request, self.context["gifs"], 20)
+            Tags.make_pagination(self, request, self.context["gifs"], 20)
         # return HttpResponse(self.context['gifs'][0].id)
-        return render(request, "index.html", self.context)
+        #response = render(request, "index.html", self.context)
+        response = render(request, "index.html", self.context)
+        try:
+            del request.session["gifs_linked_list"]
+        except KeyError:
+            pass
+        Tags.make_linked_list(self, request, gifs)
+        
+        return response
 
 class OneGif(Tags):
     
@@ -295,24 +322,33 @@ class OneGif(Tags):
         gif.views += 1
         gif.save()
         try:
-            view = GifView.objects.get(gif=gif)
+            if isinstance(user, AnonymousUser):
+                view = GifView.objects.get(Q(gif=gif),Q(user=None),Q(ip_address=ip_address))
+            else:
+                view = GifView.objects.get(Q(gif=gif),Q(user=user),Q(ip_address=ip_address))
         except GifView.DoesNotExist:
             view = None
         if view:
             view.view_date = datetime.now(timezone.utc)
             view.save()
         else:
-            GifView.objects.create(gif=gif, user=user, ip_address=ip_address)
+            if isinstance(user, AnonymousUser):
+                GifView.objects.create(gif=gif, ip_address=ip_address)
+            else:
+                GifView.objects.create(gif=gif, user=user, ip_address=ip_address)
         
 
     def make_related(self, gif):
-        related = list(OneGif.find_brute(gif.hashtags.all()))
+        related = list(set(OneGif.find_brute(gif.hashtags.all(), gif)))
         if len(related) > 4:
             self.context['related'] = []
-            while len(self.context['related']) < 4:
+            iter = 0
+            while len(self.context['related']) < 4 and iter < 10:
                 rand = random.choice(related)
+                iter += 1
                 if rand not in self.context['related']:
                     self.context['related'].append(rand)
+                    related.remove(rand)
         else:
             self.context['related'] = related
 
@@ -329,7 +365,7 @@ class OneGif(Tags):
 
     def get(self, request, pk, name):
 
-        gif = get_object_or_404(Gif,pk=pk)
+        gif = get_object_or_404(Gif,pk=pk,name=name)
         # gif = Gif.objects.get(pk=pk)
         user = request.user
         ip_address = request.META['REMOTE_ADDR']
@@ -339,20 +375,44 @@ class OneGif(Tags):
         OneGif.make_next_prev(self, gif)
 
         self.context['gif'] = gif
-        
-        
-
+    
         OneGif.is_authenticated(self, request)
 
         return render(request, "single.html", self.context)
 
-    def post(self, request, pk):
+    def post(self, request, pk, name):
 
         if request.POST.get('submit') == 'search':
 
             tags =  request.POST.get('tags').replace(" ", "+").replace("#", "%23")
 
             return redirect("/search?tags=%s"% tags)
+
+
+class Gifs(OneGif):
+
+    def get(self, request, pk, name):
+        gifs_linked_list = request.session["gifs_linked_list"]
+        # del request.session["gifs"]
+        #return HttpResponse(gifs_linked_list)#[str(pk)])
+        #gif = get_object_or_404(Gif,pk=pk,name=name)
+        gif = Gif.objects.get(pk=pk)
+        user = request.user
+        ip_address = request.META['REMOTE_ADDR']
+
+        OneGif.make_view(self, gif, user, ip_address)
+        OneGif.make_related(self, gif)
+        # OneGif.make_next_prev(self, gif)
+
+        self.context['gif'] = gif
+        self.context['gifs_links'] = gifs_linked_list[str(pk)]
+        OneGif.is_authenticated(self, request)
+
+        return render(request, "single.html", self.context)
+
+    # def post(self, request, pk, name):
+
+    #     return HttpResponse({"gif_id":request.POST.get("gif_id"), "gif_hashtags":request.POST.get("gif_id")})   
 
 
 class Best(Pool):
@@ -489,8 +549,8 @@ def likes_ajax(request):
         raise Http404
    
 def see_cache(request):
-    # return HttpResponse(cache.get('gifs'))
-    return HttpResponse([model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')[0:1]])
+    return HttpResponse(cache.get('gifs'))
+    # return HttpResponse([model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')])
 
 
 def ajax(request):
@@ -506,17 +566,36 @@ def add_ajax(request):
     #     return Http404
 
 def cookies_page(request):
+    # del request.session
+    # return HttpResponse(request.session['has_commented'])
     return HttpResponse(request.COOKIES)
 
 def set_cookies(request):
     response = redirect("/cookies")
-    response.set_cookie("hui","vam")
+    response.set_cookie("hui",Gif.objects.filter(post_to=True).order_by('-upload_date'))
     return response
 
 def session_page(request):
     return HttpResponse(request.session['has_commented'])
 
 def set_session(request):
-
-    request.session['has_commented'] = True
+    
+    # list_dicts = [model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')]
+    js = serializers.serialize("json",Gif.objects.filter(post_to=True).order_by('-upload_date'), fields=('id','name'))
+    # return HttpResponse(js)
+    request.session['has_commented'] = js#json.dumps([model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')])
     return redirect("/session")
+
+
+def goToMp4(request):
+    
+    # list_dicts = [model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')]
+    gifs = Gif.objects.all()
+    for gif in gifs:
+        gif.mp4_file_url = gif.jpg_url.replace(".jpg", ".mp4")
+        gif.save()
+        
+    # return HttpResponse(js)
+    #json.dumps([model_to_dict(gif) for gif in Gif.objects.filter(post_to=True).order_by('-upload_date')])
+    return redirect("/")
+

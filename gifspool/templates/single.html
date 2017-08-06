@@ -199,14 +199,14 @@
     </main>
 
     <div class="single-post_nav">
-        {% if prev_gif %}
-            <a href="{% url 'gifspool:onegif' prev_gif.pk gif.name %}" class="post-prev"><i class="fa fa-long-arrow-left"></i>
-                <img class="gifplayer" src="{{ prev_gif.gif_file.url }}" alt="{{ prev_gif.gif_file.url }}">
+        {% if gifs_links.prev_gif %}
+            <a href="{% url 'gifspool:gifs' gifs_links.prev_gif.pk gifs_links.prev_gif.name %}" class="post-prev"><i class="fa fa-long-arrow-left"></i>
+                <img class="gifplayer" src="{{ gifs_links.prev_gif.gif_url }}" alt="{{ gifs_links.prev_gif.gif_url }}">
             </a>
         {% endif %}
-        {% if next_gif %}
-            <a href="{% url 'gifspool:onegif' next_gif.pk gif.name %}" class="post-next"><i class="fa fa-long-arrow-right"></i>
-                <img class="gifplayer" src="{{ next_gif.gif_file.url }}" alt="{{ next_gif.gif_file.url }}">
+        {% if gifs_links.next_gif %}
+            <a href="{% url 'gifspool:gifs' gifs_links.next_gif.pk gifs_links.next_gif.name %}" class="post-next"><i class="fa fa-long-arrow-right"></i>
+                <img class="gifplayer" src="{{ gifs_links.next_gif.gif_url }}" alt="{{ gifs_links.next_gif.gif_url }}">
             </a>
         {% endif %}
     </div>

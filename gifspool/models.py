@@ -47,6 +47,7 @@ class Gif(models.Model):
     post_to = models.BooleanField(default=None)
     gif_file = models.FileField(upload_to=user_directory_path)
 
+    mp4_file_url = models.CharField(max_length=60, null=True, blank = True)
     jpg_path = models.CharField(max_length=60, default="", null=True, blank = True)
     jpg_url = models.CharField(max_length=60, default="", null=True, blank = True)
 
@@ -89,6 +90,7 @@ class Gif(models.Model):
 
         if not os.path.isfile('%s.mp4'%new_path):
             gif_to_mp4(path, new_path)
+            self.mp4_file_url = self.gif_file.url.replace(".gif", ".mp4")
 
     def __str__(self):
         return "%s-%s "%(str(self.id), self.name)
@@ -96,7 +98,7 @@ class Gif(models.Model):
 
 class GifView(models.Model):
     gif = models.ForeignKey(Gif, on_delete=models.CASCADE, blank=True, null=True,)
-    user = models.ForeignKey(User, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,)
     ip_address = models.CharField(max_length=30)
     view_date = models.DateTimeField(auto_now_add=True, null=True, blank = True)
 

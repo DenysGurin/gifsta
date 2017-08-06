@@ -29,11 +29,17 @@ class TermInlineHashtag(admin.TabularInline):
     model = GifHashtagLinker#.terms.through
     
 class GifAdmin(admin.ModelAdmin):
-    list_display = ('id', 'creator','name', 'tags', 'post_to', 'upload_date')
-    fields = ('creator', 'name', 'tags', 'post_to', 'shocked', 'loved', 'laugh', 'gif_file', 'prev_gif', 'next_gif')
-    # readonly_fields 
-    inlines = (TermInlineGif,TermInlineHashtag)
+    inlines = (TermInlineGif, TermInlineHashtag)
     actions = [make_published, make_hide]
+    list_display = ('id', 'creator', 'name', 'tags', 'post_to', 'upload_date')
+    # fields = "__all__"
+    class Meta:
+        model = Gif
+        fields = '__all__'
+
+    # fields = ('creator', 'name', 'tags', 'post_to', 'shocked', 'loved', 'laugh', 'gif_file', 'prev_gif', 'next_gif')
+    # readonly_fields 
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name','num_gifs', 'num_likes')

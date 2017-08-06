@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^(?P<pk>[^/]+)-(?P<name>[^/]+)/$', views.OneGif.as_view(), name='onegif'),
 
     url(r'^search$', views.Tags.as_view(), name='tags'),#(?P<tags>\w+)
-    url(r'^gifs/$', views.Gifs.as_view(), name='gifs'),#(?P<tags>\w+)
+    url(r'^gifs/(?P<pk>[^/]+)-(?P<name>[^/]+)/$', views.Gifs.as_view(), name='gifs'),#(?P<tags>\w+)
 
     url(r'^categories/(?P<category>%s)/$'%categories, views.CategoriesGifs.as_view(), name='categoriesgifs'),
 
@@ -45,4 +45,6 @@ urlpatterns = [
     
 	url(r'^session/$', views.session_page),
 	url(r'^set_session/$', views.set_session),
+
+    url(r'^goToMp4/$', views.goToMp4),
 ]
